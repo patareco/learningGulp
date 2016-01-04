@@ -6,18 +6,38 @@ var gulp = require('gulp'),
 	connect = require('gulp-connect'),
 	concat = require('gulp-concat');
 
-var coffeeSources = ['components/coffee/tagline.coffee'];
+var env, 
+	coffeeSources,
+	jsSources,
+	sassSources,
+	htmlSources,
+	jsonSources,
+	outputDir,
+	sassStyle;
 
-var jsSources = ['components/scripts/rclick.js',
-				 'components/scripts/pixgrid.js',
-				 'components/scripts/tagline.js',
-				 'components/scripts/template.js'];
 
-var sassSources =  ['components/sass/style.scss'];
+env = process.env.NODE_ENV || 'development';
 
-var htmlSources =  ['builds/development/*.html'];
+if (env == 'development') {
+	outputDir = 'builds/development/';
+	sassStyle = 'expanded';
+} else {
+	outputDir = 'builds/production/';
+	sassStyle = 'compressed';
+}
 
-var jsonSources = ['builds/development/js/*.json'];
+coffeeSources = ['components/coffee/tagline.coffee'];
+
+jsSources = ['components/scripts/rclick.js',
+			 'components/scripts/pixgrid.js',
+			 'components/scripts/tagline.js',
+			 'components/scripts/template.js'];
+
+sassSources =  ['components/sass/style.scss'];
+
+htmlSources =  [outputDir + '*.html'];
+
+jsonSources = [outputDir + 'js/*.json'];
 
 
 gulp.task('coffee', function() {
@@ -31,7 +51,7 @@ gulp.task('js', function() {
 	gulp.src(jsSources)
 		.pipe(concat('scripts.js'))
 		.pipe(browserify())
-		.pipe(gulp.dest('builds/development/js'))
+		.pipe(gulp.dest(outputDir + 'js'))
 		.pipe(connect.reload())
 });
 
@@ -39,11 +59,11 @@ gulp.task('compass', function() {
 	gulp.src(sassSources)
 		.pipe(compass({
 			sass: 'components/sass',
-			image: 'builds/development/images',
-			style: 'expanded' //nested,expanded,compressed,compact
+			image: outputDir + 'images',
+			style: sassStyle //nested,expanded,compressed,compact
 		})
 		.on('error', gutil.log))
-		.pipe(gulp.dest('builds/development/css'))
+		.pipe(gulp.dest(outputDir + 'css'))
 		.pipe(connect.reload())
 });
 
@@ -59,7 +79,7 @@ gulp.task('watch', function(){
 
 gulp.task('connect', function(){
 	connect.server({
-		root: 'builds/development/',
+		root: outputDir,
 		livereload: true
 	});
 });
