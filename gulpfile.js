@@ -47,7 +47,7 @@ gulp.task('watch', function(){
 	gulp.watch('components/sass/*.scss', ['compass']);
 });
 
-gulp.task('default', ['coffee', 'js', 'compass', 'log']);
+gulp.task('default', ['coffee', 'js', 'compass', 'log', 'watch']);
 
 gulp.task('log', function(){
 	gutil.log('All done! Have a wonderful day! :)')
