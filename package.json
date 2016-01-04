@@ -3,11 +3,14 @@
   "version": "0.0.1",
   "description": "Learning Gulp and setting up a workflow",
   "main": "index.js",
-  
   "repository": {
     "type": "git",
     "url": "?.git"
   },
   "author": "Zé Miguel Santos",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-util": "^3.0.7"
+  }
 }
