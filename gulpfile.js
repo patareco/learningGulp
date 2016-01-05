@@ -10,7 +10,9 @@ var gulp = require('gulp'),
 	imagemin = require('gulp-imagemin'),
 	pngcrush = require('imagemin-pngcrush'),
 	jsonMinify = require('gulp-jsonminify'),
-	concat = require('gulp-concat');
+	concat = require('gulp-concat'),
+	notify = require('gulp-notify'),
+	copy = require('gulp-copy');
 
 var env, 
 	coffeeSources,
@@ -21,7 +23,7 @@ var env,
 	outputDir,
 	sassStyle;
 
-
+//NODE_ENV=production gulp
 env = process.env.NODE_ENV || 'development';
 
 if (env == 'development') {
@@ -66,12 +68,17 @@ gulp.task('compass', function() {
 	gulp.src(sassSources)
 		.pipe(compass({
 			sass: 'components/sass',
+			css: 'builds/development/css',
 			image: outputDir + 'images',
-			style: sassStyle //nested,expanded,compressed,compact
+			style: sassStyle, //nested,expanded,compressed,compact
+			sourcemap: true
 		})
 		.on('error', gutil.log))
 		.pipe(gulp.dest(outputDir + 'css'))
 		.pipe(connect.reload())
+
+	gulp.src('components/sass/*.scss')
+		.pipe(copy(outputDir))
 });
 
 
@@ -107,6 +114,7 @@ gulp.task('images', function(){
 		use: [pngcrush()]
 	})))
 	.pipe(gulpif(env === 'production', gulp.dest(outputDir + 'images')))
+	//.pipe(notify({ message: 'Images task complete' }))
 	.pipe(connect.reload())
 })
 
@@ -118,7 +126,8 @@ gulp.task('json', function(){
 });
 
 
-gulp.task('default', ['html', 'json', 'coffee', 'js', 'compass', 'connect', 'watch']);
+gulp.task(	'default', ['html', 'json', 'coffee', 
+		 	'js', 'compass', 'images', 'connect', 'watch']);
 
 gulp.task('log', function(){
 	gutil.log('All done! Have a wonderful day! :)')
