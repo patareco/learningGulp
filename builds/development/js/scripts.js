@@ -93,7 +93,7 @@ $(function() {
   var unique = require('uniq');
   var data = [1, 2, 2, 3, 4, 5, 5, 5, 6];
   //console.log(unique(data));
-  
+
 }); //function
 },{"jquery":2,"mustache":3,"uniq":4}],2:[function(require,module,exports){
 /*!
